@@ -22,7 +22,10 @@ Preencha cada `<<PREENCHER: …>>` do repositório. Ordem sugerida:
    - `GID_SALES` — gid da aba de Compradores (New Subscriptions).
    - `CLIENT_NAME`, `MAIN_PRODUCT` — nome do cliente e da oferta principal.
    - `MAIN_PRODUCT_PREFIX` — prefixo comum às campanhas do cliente.
-   - `TAX_FACTOR` — fator de imposto/taxa da mídia (1.0 = sem imposto).
+   - `TAX_FACTOR` — fator de imposto/taxa da mídia paga (Meta Ads). **Default do
+     template: `1.13806`** (13,806%) — já vem pronto para todo cliente novo;
+     só ajuste se o cliente tiver um fator diferente, ou use `1.0` se não
+     houver imposto.
 2. **`build/build.py` — critério de MQL:** ajuste `is_medico()` e os aliases da
    coluna de qualificação em `process()` (`"medico": [...]` + índice de fallback)
    ao critério e ao cabeçalho da aba Conversas do cliente.
@@ -115,10 +118,13 @@ vendas ficaram sem anúncio de origem. **Não** usa as colunas `Compra Detectada
 do zero, mais robusto a erro de fórmula).
 
 ### Imposto da mídia paga
-`TAX_FACTOR` em `build.py` (`<<PREENCHER: fator, ex. 1.13806>>`). O toggle
-"Imposto Meta" fica **ativo por padrão** (`STATE.tax=true` em `app.js`) e aplica
-o fator em todo o gasto/derivados (CPL, CPMQL, CAC etc.); desativar o toggle
-volta ao gasto sem imposto. Se o cliente não tiver imposto, use `TAX_FACTOR = 1.0`.
+`TAX_FACTOR` em `build.py`, com **default `1.13806`** (13,806%) já configurado no
+template — aplica-se somente ao gasto de **Meta Ads**. O toggle "Imposto Meta"
+fica **ativo por padrão** (`STATE.tax=true` em `app.js`) e aplica o fator em
+todo o gasto de mídia paga/derivados (CPL, CPMQL, CAC etc.) via `taxf()`, que só
+multiplica `a.sp` (gasto do Meta Ads) — nunca outras fontes; desativar o toggle
+volta ao gasto sem imposto. Se o cliente tiver um fator diferente, ajuste
+`TAX_FACTOR`; se não houver imposto, use `TAX_FACTOR = 1.0`.
 
 ### Convenções de campanha (do cliente)
 Todas as campanhas usam o prefixo `<<PREENCHER: MAIN_PRODUCT_PREFIX>>`
