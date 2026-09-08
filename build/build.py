@@ -58,7 +58,9 @@ MAIN_PRODUCT = "<<PREENCHER: nome do produto/oferta principal>>"
 MAIN_PRODUCT_PREFIX = "<<PREENCHER: prefixo das campanhas do cliente, ex. NOMECLIENTE>>"
 
 BRT = timezone(timedelta(hours=-3))   # horario de Brasilia (exibicao)
-TAX_FACTOR = 1.0   # <<PREENCHER: fator de imposto/taxa da conta de mídia, ex. 1.13806 (13,806%); 1.0 = sem imposto>>
+TAX_FACTOR = 1.13806   # fator padrão de imposto/taxa sobre o gasto de mídia paga (Meta Ads) = 13,806%.
+                       # Default do template para toda nova dash criada a partir dele; ajuste apenas
+                       # se o cliente tiver um fator diferente, ou use 1.0 se não houver imposto.
 
 # --------------------------------------------------------------------------- #
 # Regras da aba Relatório (Top/Piores anúncios)
