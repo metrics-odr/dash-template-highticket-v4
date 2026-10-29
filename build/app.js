@@ -956,6 +956,47 @@ function dailyCells(x,d,isTotal){
     convmql:s.convmql, vendas:s.vendas, cac:s.cac, fat:s.fat, receita:s.receita, roas:s.roas};
 }
 
+/* Indicadores por dia (aba mídia paga): linhas diárias, até 2 eixos.
+   series: [{label,data,color,axis:'y'|'y1',fmt}] — fmt formata tooltip/eixo. */
+function indChart(id, labels, series){
+  destroy(id); const el=document.getElementById(id); if(!el) return;
+  const mut=cmuted(), gr=cgrid(), two=series.some(s=>s.axis==='y1');
+  const ax=(pos,s,grid)=>({position:pos,ticks:{color:mut,font:{size:10},callback:v=>s.fmt(v)},grid:grid?{color:gr}:{display:false}});
+  const sc={x:{ticks:{color:mut,font:{size:9},maxRotation:60},grid:{display:false}}};
+  sc.y=ax('left',series.find(s=>s.axis!=='y1'),true);
+  if(two) sc.y1=ax('right',series.find(s=>s.axis==='y1'),false);
+  charts[id]=new Chart(el,{type:'line',
+    data:{labels,datasets:series.map(s=>({label:s.label,data:s.data,borderColor:s.color,backgroundColor:s.color,yAxisID:s.axis||'y',borderWidth:2,pointRadius:2,spanGaps:true,tension:.25}))},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:cink(),boxWidth:10,usePointStyle:true,font:{size:11}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+(c.raw==null?'-':series[c.datasetIndex].fmt(c.raw))}}},
+      scales:sc}});
+}
+/* Mostra os 3 gráficos conforme os dados do período:
+   CPM/CTR sempre · LP (pv>0): CR + ConvLP, senão ConvForm (Leads/Cliques) · Tx‑MQL só se houver MQL. */
+function renderIndicadores(fL,fM,fS){
+  const d=daily(fL,fM,fS), labels=d.map(x=>x.d.slice(5)), pal=chartPalette();
+  const r=(n)=>n==null?null:+n.toFixed(4), rate=(n,m)=>m?r(n/m):null;
+  const fBrl=v=>brl(v), fPct=v=>pct(v);
+  indChart('mIndCpmCtr', labels, [
+    {label:'CPM',data:d.map(x=>x.im?+((x.sp*taxf())/x.im*1000).toFixed(2):null),color:pal[0],axis:'y',fmt:fBrl},
+    {label:'CTR',data:d.map(x=>rate(x.cl,x.im)),color:pal[1],axis:'y1',fmt:fPct}]);
+  const hasLP=d.some(x=>x.pv>0), hasMql=d.some(x=>x.mqls>0);
+  const mid=document.getElementById('mIndMidTitle'), hint=document.getElementById('mIndMidHint');
+  if(hasLP){
+    mid.textContent='Connect Rate e ConvLP por dia'; hint.textContent='CR = Page Views/Cliques · ConvLP = Leads/Page Views';
+    indChart('mIndMid', labels, [
+      {label:'CR',data:d.map(x=>rate(x.pv,x.cl)),color:pal[1],axis:'y',fmt:fPct},
+      {label:'ConvLP',data:d.map(x=>rate(x.leads,x.pv)),color:pal[3],axis:'y',fmt:fPct}]);
+  } else {
+    mid.textContent='ConvForm por dia'; hint.textContent='ConvForm = Leads/Cliques (sem Page Views)';
+    indChart('mIndMid', labels, [{label:'ConvForm',data:d.map(x=>rate(x.leads,x.cl)),color:pal[3],axis:'y',fmt:fPct}]);
+  }
+  const tx=document.getElementById('mIndTxCard'); if(tx) tx.style.display=hasMql?'':'none';
+  if(hasMql) indChart('mIndTx', labels, [{label:'Tx‑MQL',data:d.map(x=>rate(x.mqls,x.leads)),color:pal[2],axis:'y',fmt:fPct}]);
+  else destroy('mIndTx');
+}
+
 /* ---------------- PAGE 2: Captura Meta Ads ---------------- */
 /* Mar04: considera TODOS os leads e TODO o gasto de todas as fontes de tráfego
    (sem filtrar por atribuição). Hoje só há Meta; quando vier google/tiktok/orgânico
@@ -992,6 +1033,7 @@ function renderMeta(){
   document.getElementById('metaFunnel').innerHTML=funnelHTML(steps);
 
   comboChart('mCombo', daily(fL,fM,fS));
+  renderIndicadores(fL,fM,fS);
   // Mar02: barras de MQLs por anúncio (não leads)
   const mqlByAd={}; fL.forEach(l=>{ mqlByAd[l.ad]=(mqlByAd[l.ad]||0)+l.q; });
   hbar('mMqlAd', Object.entries(mqlByAd).map(([label,leads])=>({label,leads})), x=>x.leads, ()=>cvar('--chart-mqls'), 10, 'MQLs');
