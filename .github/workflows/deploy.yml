@@ -21,14 +21,16 @@ permissions:
   pages: write
   id-token: write
 
-# Nunca roda dois deploys ao mesmo tempo; nao cancela um deploy em andamento
+# Nunca roda dois deploys ao mesmo tempo; um run novo cancela o anterior, para um
+# run travado nao bloquear as atualizacoes periodicas
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}

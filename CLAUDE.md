@@ -246,6 +246,25 @@ CPL · Tx‑MQL · MQLs · CPMQL · ConvMQL · Vendas · CAC · Fat. · Receita 
 tabelas diárias entram também **Checkouts** e **VisCHK** (da coluna "Adds to Cart"
 do Meta Ads, proxy de Checkout). Sem essas colunas, ficam "-".
 
+**Melhorias portadas dos clientes (nov/2026):**
+- **Tabelas Campanha/Conjunto/Anúncio (aba Meta Ads):** campo de **busca** por nome + botão
+  "✕ Filtro" em cada uma (reseta busca + seleção cruzada; o "Remover Filtros" global também
+  limpa as buscas), **heatmap** em Gasto/CPL/CPMQL/CAC/ROAS. Nas métricas de **custo**
+  (CPL/CPMQL/CAC, também na tabela diária) o heatmap é **invertido** (`heatInv`: menor = mais
+  vibrante). Cores `--heat-cpl/cpmql/cac` em `identidade-visual.css`.
+- **Gráficos "por dia" das hierárquicas:** toggle **CPMQL / CPL / CAC** por painel
+  (`STATE.chMetric`, `CHART_METRICS`). Gráfico combinado diário com **eixo próprio** para CPL/CPMQL.
+- **Linhas "(sem campanha/conjunto/anúncio)"** ficam fora das tabelas/legendas (`isNoAttrib`),
+  mas continuam nos totais. `build.py → unify_names()` unifica grafias equivalentes
+  (caixa, acento, espaço/`_`/`-`) para não duplicar linhas.
+- **Mobile:** menu hambúrguer corrigido (checkbox dentro de `#app`, backdrop + ✕), tabelas
+  "fit" com scroll horizontal legível, ajustes ≤640px. Sidebar com ícones SVG.
+- **Status do anúncio (Relatório):** `adRecommendation()` → Escalar/Manter/Observar/Cortar vs.
+  metas CPMQL/CAC (CAC bom sozinho não escala: exige faturamento; sem venda julga pelo CPMQL;
+  sem amostra/meta → Observar). Substitui Avaliável/Em observação.
+- **deploy.yml:** `cancel-in-progress: true` + `timeout-minutes: 15` (run travado não bloqueia
+  as atualizações periódicas).
+
 **Regras obrigatórias das tabelas** (ver `GUIA-REPLICACAO.md`): cabeçalho sticky;
 ordenação tri‑state; colunas redimensionáveis (persist localStorage); linha
 "Total Geral" fixa; dimensão nunca truncada; seleção com toggle + Ctrl multi;

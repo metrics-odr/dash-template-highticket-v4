@@ -164,11 +164,11 @@ Ao ver um deles ruim, aponte a **etapa** que perdeu eficiência — não recomen
 A aba calcula sozinha, por anúncio (com gasto no período):
 - **Top**: ranqueado pelo **resultado mais profundo disponível** (Venda → Reunião
   Realizada → Agendamento → MQL), maior volume + menor custo, **amostra relevante primeiro**.
-  Anúncio promissor **sem amostra suficiente** entra marcado **"Em observação"** —
+  Anúncio promissor **sem amostra suficiente** entra marcado **"Observar"** —
   nunca é "vencedor" só por 1 resultado com pouco gasto.
 - **Piores**: só anúncios com **investimento relevante** e resultado profundo
   fraco / custo pior que a média; **nunca** por CTR/CPM/CPL isolados. Sem amostra
-  suficiente → **"Em observação"**, não "ruim".
+  suficiente → **"Observar"**, não "ruim".
 - Limiares em `build.py`: `SAMPLE_MIN_SPEND`, `SAMPLE_MIN_MQLS`, `TOP_ADS_N`.
 - **Link** abre o criativo (coluna opcional de permalink na aba de mídia →
   `ad_links`).
@@ -397,7 +397,7 @@ O gestor preenche no topo da aba: **Meta CPMQL**, **Meta CAC**, **Volume mínimo
 amostral (MQLs)** e **N dias p/ corte**. Defaults em `build.py` (`META_CPMQL`,
 `META_CAC` = None → "não definida"; `VOLUME_MIN_AMOSTRAL`, `N_DIAS_CORTE`). As
 tabelas de anúncio **recoram CPMQL/CAC** vs meta (verde ≤ meta · amarelo até
-+30% · vermelho acima) e o badge **Em observação/Avaliável** usa o volume
++30% · vermelho acima) e o status **Escalar/Manter/Observar/Cortar** (`adRecommendation`) usa o volume
 mínimo — tudo ao vivo. O texto dos Insights **cita a meta (ou "meta não
 definida")** e usa o volume mínimo/N dias configurados como critério das
 classificações.

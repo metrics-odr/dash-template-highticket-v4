@@ -14,14 +14,16 @@
 <style>__STYLES__</style>
 </head>
 <body>
-<input type="checkbox" id="navToggle">
 <div id="app">
+  <input type="checkbox" id="navToggle">
+  <label class="nav-backdrop" for="navToggle"></label>
   <aside class="sidebar">
+    <label class="nav-close" for="navToggle" title="Fechar menu">✕</label>
     <div class="logo"><div class="logo-main"><<PREENCHER: nome do cliente>></div><div class="logo-sub"><<PREENCHER: slogan/subtítulo do cliente>></div></div>
     <div class="sec">Dashboards</div>
-    <div class="nav-item active" data-page="geral"><span class="ic">◱</span> Visão Geral de Leads</div>
-    <div class="nav-item" data-page="meta"><span class="ic">◨</span> Captura Meta Ads</div>
-    <div class="nav-item" data-page="rel"><span class="ic">▤</span> Relatório</div>
+    <div class="nav-item active" data-page="geral"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="16" r="3.5"/><circle cx="17.5" cy="16" r="3.5"/><path d="M10 16h4M3 16V8.5L5.5 4h2l1 3.5M21 16V8.5L18.5 4h-2l-1 3.5M8.5 7.5h7"/></svg></span> Visão Geral de Leads</div>
+    <div class="nav-item" data-page="meta"><span class="ic ic-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c-2-2.8-3.6-5-6-5a4.5 4.5 0 0 0 0 10c2.4 0 4-2.2 6-5zm0 0c2 2.8 3.6 5 6 5a4.5 4.5 0 0 0 0-10c-2.4 0-4 2.2-6 5z"/></svg></span> Captura Meta Ads</div>
+    <div class="nav-item" data-page="rel"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></span> Relatório</div>
     <div class="foot">Somente leitura · atualiza ~30 min<br><span id="buildFoot"></span></div>
   </aside>
 
@@ -119,28 +121,58 @@
 
         <h2 class="sec-title">Hierarquia · Campanha → Conjunto → Anúncio</h2>
         <div class="table-chart-pair">
-          <div class="thead-title">Campanhas</div>
+          <div class="thead-title"><span>Campanhas</span><div class="tbl-tools">
+            <input type="text" class="tbl-search" id="tCampSearch" placeholder="Buscar campanha...">
+            <button type="button" class="tbl-clear-btn" id="tCampClear">✕ Filtro</button>
+          </div></div>
           <div class="tbl-wrap tbl-normal"><table class="dt" id="tCamp"></table></div>
           <div class="pair-chart">
-            <div class="pc-title">Custo por MQL, por campanha, por dia · clique numa linha ou na legenda para filtrar</div>
+            <div class="pc-head">
+              <div class="pc-title" id="chCampTitle">Custo por MQL, por campanha, por dia · clique numa linha ou na legenda para filtrar</div>
+              <div class="pc-metrics" data-chart="camp">
+                <button type="button" class="pc-metric-btn active" data-metric="cpmql">CPMQL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cpl">CPL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cac">CAC</button>
+              </div>
+            </div>
             <div class="pc-canvas-wrap"><canvas id="chCamp"></canvas></div>
             <div class="chart-legend" id="chCampLegend"></div>
           </div>
         </div>
         <div class="table-chart-pair">
-          <div class="thead-title">Conjuntos (Ad Sets)</div>
+          <div class="thead-title"><span>Conjuntos (Ad Sets)</span><div class="tbl-tools">
+            <input type="text" class="tbl-search" id="tAdsetSearch" placeholder="Buscar conjunto...">
+            <button type="button" class="tbl-clear-btn" id="tAdsetClear">✕ Filtro</button>
+          </div></div>
           <div class="tbl-wrap tbl-normal"><table class="dt" id="tAdset"></table></div>
           <div class="pair-chart">
-            <div class="pc-title">Custo por MQL, por conjunto, por dia · clique numa linha ou na legenda para filtrar</div>
+            <div class="pc-head">
+              <div class="pc-title" id="chAdsetTitle">Custo por MQL, por conjunto, por dia · clique numa linha ou na legenda para filtrar</div>
+              <div class="pc-metrics" data-chart="adset">
+                <button type="button" class="pc-metric-btn active" data-metric="cpmql">CPMQL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cpl">CPL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cac">CAC</button>
+              </div>
+            </div>
             <div class="pc-canvas-wrap"><canvas id="chAdset"></canvas></div>
             <div class="chart-legend" id="chAdsetLegend"></div>
           </div>
         </div>
         <div class="table-chart-pair">
-          <div class="thead-title">Anúncios</div>
+          <div class="thead-title"><span>Anúncios</span><div class="tbl-tools">
+            <input type="text" class="tbl-search" id="tAdSearch" placeholder="Buscar anúncio...">
+            <button type="button" class="tbl-clear-btn" id="tAdClear">✕ Filtro</button>
+          </div></div>
           <div class="tbl-wrap tbl-double"><table class="dt" id="tAd"></table></div>
           <div class="pair-chart">
-            <div class="pc-title">Custo por MQL, por anúncio, por dia · clique numa linha ou na legenda para filtrar</div>
+            <div class="pc-head">
+              <div class="pc-title" id="chAdTitle">Custo por MQL, por anúncio, por dia · clique numa linha ou na legenda para filtrar</div>
+              <div class="pc-metrics" data-chart="ad">
+                <button type="button" class="pc-metric-btn active" data-metric="cpmql">CPMQL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cpl">CPL</button>
+                <button type="button" class="pc-metric-btn" data-metric="cac">CAC</button>
+              </div>
+            </div>
             <div class="pc-canvas-wrap"><canvas id="chAd"></canvas></div>
             <div class="chart-legend" id="chAdLegend"></div>
           </div>
